@@ -1,0 +1,114 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5 p-0" style="background-image: url({% static 'cl/img/carousel-bg-1.jpg' %});">
+        <div class="container-fluid page-header-inner py-5">
+            <div class="container text-center">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Order History</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Invoice</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="d-flex  justify-content-end  " >
+              <a href="{% url 'cl-myproductorders' request.user.id %}" class="p-3 bg-primary text-white">View products order History</a>
+
+            </div>
+
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="text-primary text-uppercase">// Service Request History //</h6>
+            </div>
+
+            <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+<!--              <div class="card">-->
+                <div class="card-body">
+                 <center>{% if servicedetails %} <h4 class="card-title">View Service Requests Here</h4>{% else %}{% endif %}</center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+                {% if servicedetails %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">Order id</th>
+                          <th class="card-title">Name</th>
+                          <th class="card-title"> Total no. of services</th>
+                          <th class="card-title">Contact no.</th>
+                          <th class="card-title">Address </th>
+                          <th class="card-title">Additional Problem <br> Details </th>
+                          <th class="card-title">Date of order</th>
+                          <th class="card-title">Invoice</th>
+<!--                            <th class="card-title"><i class="fa-solid fa-file-arrow-down "></i></th>-->
+
+                        </tr>
+                      </thead>
+                    {% for orderdata in orderdata %}
+                      <tbody>
+                        <tr>
+                          <td>{{orderdata.id}}</td>
+                          <td>{{orderdata.user}} </td>
+
+                            <td>{% for key,value in servicedetails.items %}
+
+
+                                {% if orderdata.id == key %}
+
+                                     <strong> {{value|length}} Services -- ₹ {{orderdata.totalprice}} </strong><br><br>
+                                    {% for a in value %}
+                                                {{forloop.counter}}. &nbsp;{{a.servicename}}<br>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %} </td>
+
+                          <td>{{orderdata.contact}}</td>
+                            <td>{{orderdata.clientlocation}}</td>
+                            <td>{{orderdata.additionalprobleminfo}}</td>
+                          <td>{{orderdata.date|date:"b-d-Y"}}<br><hr>{{orderdata.date|date:"H:i A"}}</td>
+
+
+                            <td><a href="{% url 'cl-myorderinvoice' orderdata.id %}" > <i  class="fa-solid fa-eye px-2 py-3 fa-lg download-icon"></i></a></td>
+<!--                            <td><a href="#" ><i  class="fa-solid fa-file-arrow-down px-2 py-3 fa-lg download-icon"></i></a>  </td>-->
+                        </tr>
+                      </tbody>
+
+                    {% endfor %}
+
+
+                    </table>
+                  </div>
+                 {% else %}
+                   <center>
+                       <h2 class="text-primary ">Oops You have not requested any services yet... </h2>
+                       <img src="{% static 'cl/img/no-orders.jpg' %}" style="height:28rem; width:28rem;">
+                   </center>
+
+                 {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+    <!-- Contact End -->
+
+
+{% endblock %}

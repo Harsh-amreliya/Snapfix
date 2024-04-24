@@ -1,0 +1,51 @@
+{% extends "ad/master.html" %}
+{% block content %}
+{% load static %}
+
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Manage The Servicestores Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">Store Image</th>
+                          <th class="card-title">Store Name</th>
+                          <th class="card-title">Owner Name</th>
+                          <th class="card-title">Status</th>
+                          <th class="card-title">View</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                          <td class="py-2" > <img src="{{ d.imageofstore.url }}" alt="image" style="height:65px; width:90px; border-radius:5px"/></td>
+                          <td>{{d.storename}}</td>
+                          <td>{{d.ownername}}</td>
+                            <td>{% if d.is_activee == 0 %}<label class="badge badge-danger" >Inactive</label>{% else %}<label class="badge badge-success" >Active</label>{% endif %}</td>
+                            <td><a href="{% url 'ad-editservice' d.id %}">View</a></td>
+                            <td><a href="{% url 'ad-deleteservice' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+ <div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px;margin-left:-15px; height:580px; width:100%; ">
+
+          <div class="row">
+            <div class="col-md-11 grid-margin stretch-card" >
+              <div class="card" style="margin-top:100px; margin-left:55px;box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body">
+                 <center> <h4 class="card-title">excel List Your Product Here </h4>
+                 {{msg}}</center>
+                  <hr>
+                    <center><h4>Make sure your excel format looks like this.</h4></center>
+                    <div class="d-flex justify-content-center">
+                        <img src="{% static 'st/images/product-excel.png' %}">
+                    </div>
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data" >
+                      {% csrf_token%}
+                    <br>
+                    <div class="row d-flex justify-content-around">
+                        <div class="form-group col-5">
+                          <label>Select Excel File:</label>
+                          <input type="file" class="form-control" name="excel_file" accept=".xls,.xlsx" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end w-100">
+                      <a href="#"> add more&nbsp;+</a>
+                    </div>
+                    <hr>
+                  <center>
+                    <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Upload">
+
+                  </center>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+ </div>
+{% endblock %}

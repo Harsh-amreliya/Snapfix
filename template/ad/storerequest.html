@@ -1,0 +1,53 @@
+{% extends "ad/master.html" %}
+{% block content %}
+{% load static %}
+
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Requests for store Registration</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">ID</th>
+                          <th class="card-title">Username</th>
+                          <th class="card-title">Store name</th>
+                          <th class="card-title">Store Type</th>
+                          <th class="card-title">Email</th>
+                          <th class="card-title">Register</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                          <td class="py-2" > {{d.id}} </td>
+                          <td>{{d.username}}</td>
+                          <td>{{d.storename}}</td>
+                          <td> {{d.type}}</td>
+                          <td>{{d.email}}</td>
+                            <td>{% if d.listed %}✅{% else %}<a href="{% url 'ad-addnow' d.id %}">Add Now</a>{% endif %}</td>
+                            <td><a href="{% url 'ad-deleterequest' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

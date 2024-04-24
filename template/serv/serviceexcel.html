@@ -1,0 +1,60 @@
+{% extends "serv/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+    .hidden{
+        display:none;
+    }
+
+</style>
+<div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px; height:660px; width:100%; ">
+          <div class="row" >
+            <div class="col-md-12 grid-margin stretch-card"  >
+              <div class="card" style="margin-top:80px; box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body " >
+                 <center> <h4 class="card-title">{{msg}}</h4>
+
+                  <hr>
+                    <div >
+                        <h4 class="d-flex justify-content-center">Make sure that data in excel sheet should have same format like this</h4>
+                       <center><img  src="{% static 'serv/images/demo-excel.png' %}"></center>
+                    </div>
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()" >
+                      {%csrf_token%}
+                    <br>
+                    <div class="row d-flex justify-content-around " >
+                      <div class="form-group col-5">
+                       <label for="excel_file">Select Excel File:</label>
+                       <input type="file" class="form-control" name="excel_file" id="excel_file" accept=".xlsx, .xls"><br>
+                      </div>
+                    </div>
+                    <hr>
+                  <center>
+                    <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Upload">
+
+                  </center>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+<script>
+        function validateForm() {
+            var excelFile = document.getElementById("excel_file").value;
+
+            if (excelFile == "") {
+                alert("Please select an Excel file to upload.");
+                return false;
+            }
+
+            var extension = excelFile.split('.').pop().toLowerCase();
+            if (extension != "xlsx" && extension != "xls") {
+                alert("Please upload a valid Excel file with .xlsx or .xls extension.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Manage Use in Category Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">ID</th>
+                          <th class="card-title">usecategory</th>
+                          <th class="card-title">Where to use</th>
+                          <th class="card-title">View</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                          <td>{{d.id}}</td>
+                          <td>{{d.usecategory}}</td>
+                          <td>{{d.wheretouse}}</td>
+                            <td><a href="{% url 'st-edituseincategory' d.id %}">View</a></td>
+                            <td><a href="{% url 'st-deleteuseincategory' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

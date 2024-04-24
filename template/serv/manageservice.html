@@ -1,0 +1,62 @@
+{% extends "serv/master.html" %}
+{% block content %}
+{% load static %}
+
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Manage Services Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+            {% if data %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">ID</th>
+                          <th class="card-title">Service image</th>
+                          <th class="card-title">Service Name</th>
+                          <th class="card-title">Price</th>
+                          <th class="card-title">Average Time</th>
+                          <th class="card-title">&nbsp;Towing required</th>
+                          <th class="card-title">View</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                            <td>{{d.id}}</td>
+                          <td class="py-2" > <img src="{{ d.serviceimage.url }}" alt="image" style="height:65px; width:95px; border-radius:5px"/></td>
+                          <td>{{d.servicename}}</td>
+                          <td> {{ d.serviceprice}}</td>
+                          <td> {{ d.avgtime}}</td>
+                          <td class="text-center"> {% if d.towable %}<i class="fa-solid fa-check fa-xl text-success"></i> {% else %}❌{% endif %}</td>
+                          <td><a href="{% url 'serv-editservice' d.id %}">View</a></td>
+                          <td><a href="{% url 'serv-deleteservice' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+
+                    </table>
+                  </div>
+            {% else %}
+                    <center>
+                    <h2 class=" text-center text-danger" >Oops No services listed yet... </h2><br>
+                    <img  src="{% static 'serv/images/no-services-2.jpg' %}" style="height:30rem; width:30rem; "><br>
+                    <h3 class=" text-center card-title">Click here to add <a href="{% url 'serv-servicelisting' %}" class="text-danger">services.</a></h3></center>
+              {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

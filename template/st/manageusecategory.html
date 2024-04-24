@@ -1,0 +1,61 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+
+<div class="row" xmlns="http://www.w3.org/1999/html">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Manage Use Category Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+
+                  <div class="table-responsive">
+                  {% if data %}
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">ID</th>
+                          <th class="card-title">Type</th>
+                          <th class="card-title">Company Name</th>
+                          <th class="card-title">Model Name</th>
+                          <th class="card-title">Model Year</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                          <td>{{d.id}}</td>
+                          <td>{{d.companyname}}</td>
+                          <td>{{d.modelname}}</td>
+                          <td>{{d.modelyear}}</td>
+                            <td><a href="{% url 'st-editusecategory' d.id %}">View</a></td>
+                            <td><a href="{% url 'st-deleteusecategory' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+
+                    </table>
+                  {% else %}
+                      <center>
+                       <h2 class=" text-center text-danger" >Oops No use category listed yet... </h2><br>
+                    <img  src="{% static 'st/images/no-product.jpg' %}" style="height:30rem; width:38rem; "><br>
+                    <h3 class=" text-center card-title">Click here to add <a href="{% url 'st-usecategorylisting' %}" class="text-danger">use ctaegory.</a></h3></center>
+
+
+                   {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

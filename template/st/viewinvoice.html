@@ -1,0 +1,164 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+    @page {
+    size: A4; /* or letter, legal, etc. */
+    margin: 0;
+  }
+
+    .right{
+        text-align:right;
+        width:160px;
+    }
+    .center{
+        text-align:center;
+    }
+    tbody tr{
+        border-bottom: 1px solid grey;
+    }
+    tbody td{
+        padding:0.5rem 0;
+    }
+    .line-height{
+        line-height:1.5rem;
+    }
+    .grey{
+        background-color:lightgrey;
+    }
+</style>
+
+ <div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px;margin-left:-15px; height:980px; width:100%; ">
+
+          <div class="row">
+            <div class="col-md-11 grid-margin stretch-card" >
+              <div class="card" style="margin-top:100px; margin-left:55px;box-shadow:6px 6px 15px lightblue;">
+                  <center> <h4 class="card-title mt-4"> Invoice </h4>
+                 {{msg}}</center>
+                   <hr>
+                <div class="card-body" id="myBillingArea">
+
+
+
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <label class="card-title" style="font-size:25px">{{storedetails.storename}} </label>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                            <label>{{storedetails.storeaddress}}</label><br>
+                            <label><i class="fa-solid fa-phone-volume"></i> {{storedetails.storecontact}}</label>
+                            </div>
+                            <div class="col-12 text-center card-title">
+                                Invoice: #{{orderdata.id}}
+                            </div>
+                        </div>
+                    <hr style="border:1px solid grey" class="mt-4">
+
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-4">
+                                <b>Bill To:    </b><br>
+                                {{orderdata.user}} <br>
+                                {{orderdata.address}} <br>
+                                {{orderdata.user.email}} <br>
+                                {{orderdata.contact}} <br>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end">
+                                <div class="ms-auto">
+                                    <b>Invoice Date: {{orderdata.date}} </b><br>
+                                    Due Date: On Delivery
+                                </div>
+                            </div>
+
+                        </div>
+                    <hr style="border:1px solid grey" class="mt-3">
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <table class="w-100 border-">
+                                    <thead>
+                                    <tr class="grey">
+                                        <th> Product Name </th>
+                                        <th class="center"> Use Category </th>
+                                        <th class="right"> Quantity </th>
+                                        <th class="right"> Unit Price </th>
+                                        <th class="right"> Subtotal </th>
+                                    </tr>
+                                    </thead>
+                                    {% for d in order %}
+                                    <tbody>
+                                        <tr>
+                                            <td>{{d.productname}}</td>
+                                            <td class="center">{{d.usecategorylist.companyname}} ({{d.usecategorylist.modelname}} - {{d.usecategorylist.modelyear}})</td>
+                                            <td class="right">{{d.quantity}}</td>
+                                            <td class="right">₹ {{d.productprice}}</td>
+                                            <td class="right">{% widthratio d.productprice 1 d.quantity %}</td>
+
+                                        </tr>
+
+                                    </tbody>
+                                    {% endfor %}
+
+                                </table>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end mt-3">
+
+                                <div class=" col-6 line-height p-0">
+                                    <b>Payment Type: Cash on delivery</b>
+                                </div>
+
+                                <div class="d-flex justify-content-end col-6 p-0">
+                                    <div class=" line-height">
+                                        Subtotal: ₹ {{amount}} <br>
+                                        Tax(18%): ₹ {{gst}} <br>
+                                       <b> Total: ₹ {{amtwithgst}}</b>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <hr style="border:1px solid grey">
+                                    <b>{{words}} Rupees.</b>
+                                <hr style="border:1px solid grey">
+                            </div>
+
+                            <div class="col-12">
+                                <label style="color:grey; font-size:13px;">Note: This invoice is generated by system(Snapfix).</label>
+                            </div>
+                        </div>
+
+                        <br>
+
+
+                </div>
+                   <input type="submit" class=" btn btn-primary mr-2 t-1-07 w-25 mx-auto mb-4" onclick="downloadPDF(123)" value="Download">
+
+              </div>
+            </div>
+          </div>
+ </div>
+
+<script>
+    window.jsPDF = window.jspdf.jsPDF;
+var docPDF = new jsPDF();
+
+function downloadPDF(invoiceNo){
+
+    var elementHTML = document.querySelector("#myBillingArea");
+    docPDF.html(elementHTML, {
+        callback: function(docPDF) {
+            docPDF.save(invoiceNo+'.pdf',{ autoDownload: true });
+        },
+        x: 5,
+        y: 10,
+        width: 200,
+        windowWidth: 630
+    });
+}
+</script>
+{% endblock %}

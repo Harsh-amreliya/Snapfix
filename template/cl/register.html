@@ -1,0 +1,153 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapfix Login</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: url("{% static 'st/bg1.png'%}") center/cover no-repeat;
+    background-color:black;
+}
+
+.container {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    box-shadow:3px 10px 30px rgb(0,0,0,0.5);
+}
+
+.d-none{
+display: none;
+}
+
+.login-form h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline:none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff3c18;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: red;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <form class="login-form" method="POST" onsubmit="return validatePasswords()">
+            {% csrf_token%}
+            <h4>{{msg}}</h4>
+            <h1>Snapfix Registration</h1>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" pattern="[A-Za-z ]{1,20}" title="Only alphabets and spaces are allowed, maximum 20 characters" maxlength="20" required>
+            </div>
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="email" id="email" name="email" required>
+                <span id="emailError" class="d-none" style="color:red;">Invalid Email Address</span>
+            </div>
+            <div class="input-group">
+                <label >Password</label>
+                <input type="password" id="exampleInputPassword1" name="password" required oninput="validatePasswords()">
+            </div>
+            <div class="input-group">
+                <label >Confirm password</label>
+                <input type="password" id="exampleInputConfirmPassword1" name="password1" oninput="validatePasswords()">
+                                <div id="password-error-message" class="invalid-feedback d-flex" style="font-size:12px;color:red;"></div>
+
+            </div>
+            <button type="submit">Register</button>
+            <p>Already have an account <a href="{% url 'cl-login' %}">Login now</a></p>
+        </form>
+    </div>
+</body>
+</html>
+<script>
+
+
+    function validatePasswords() {
+   console.log("getting clled")
+    var password = document.getElementById("exampleInputPassword1").value;
+    var confirmPassword = document.getElementById("exampleInputConfirmPassword1").value;
+    var regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
+    var passwordField = document.getElementById("exampleInputPassword1");
+    var confirmPasswordField = document.getElementById("exampleInputConfirmPassword1");
+    var errorMessage = document.getElementById("password-error-message");
+
+    if (!regex.test(password)) {
+        passwordField.classList.add("is-invalid");
+        confirmPasswordField.classList.remove("is-invalid");
+        errorMessage.innerText = "Password must be at least 8 characters long and contain at least one capital letter and one special character (!@#$%^&*)";
+        return false;
+    } else if (password !== confirmPassword) {
+        confirmPasswordField.classList.add("is-invalid");
+        passwordField.classList.remove("is-invalid");
+        errorMessage.innerText = "Passwords do not match";
+        return false;
+    } else {
+        passwordField.classList.remove("is-invalid");
+        confirmPasswordField.classList.remove("is-invalid");
+        errorMessage.innerText = "";
+        return true;
+    }
+}
+
+   // Get the email input field and the error message element
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+  // Define a regular expression pattern for email validation
+  const emailPattern = /^[^\s@]+@gmail\.com$/;
+  // Add event listener to trigger validation on input change
+  emailInput.addEventListener('input', function() {
+    // Check if the entered email address matches the pattern
+
+    if (emailPattern.test(emailInput.value)) {
+      emailError.classList.add('d-none'); // Show error message
+    }
+    else {
+      emailError.classList.remove('d-none'); // Hide error message
+    }
+  });
+</script>

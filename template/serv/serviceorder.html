@@ -1,0 +1,93 @@
+{% extends "serv/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    .download-icon{
+        background-color:lightblue;
+        border-radius:3px;
+    }
+    .share-icon{
+        background-color:lightgreen;
+        color:#008000a3;
+        border-radius:3px;
+        margin-left:15px;
+        padding-left:7px;
+        padding-right:5px;
+
+    }
+</style>
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title"> View Service Requests Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+               {% if combinedata %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">Order id</th>
+                          <th class="card-title">Client name</th>
+                          <th class="card-title"> Total no. of services</th>
+                          <th class="card-title">Contact no.</th>
+                          <th class="card-title">Address </th>
+                          <th class="card-title">Additional Problem <br> Details </th>
+                          <th class="card-title">Date of order</th>
+                          <th class="card-title">Invoice</th>
+                            <th class="card-title"><i class="fa-solid fa-square-check "></i> </th>
+
+                        </tr>
+                      </thead>
+                    {% for orders in combinedata %}
+                      <tbody>
+                        <tr>
+                          <td>{{orders.id}}</td>
+                          <td>{{orders.user}}</td>
+
+                            <td>{% for key,value in servicedata.items %}
+
+
+                                {% if orders.id == key %}
+                                     <strong> {{value|length}} Services -- ₹ {{orders.totalprice}} </strong><br><br>
+                                    {% for a in value %}
+                                                {{forloop.counter}}. &nbsp;{{a.servicename}}<br>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %} </td>
+
+                          <td>{{orders.contact}}</td>
+                            <td>{{orders.clientlocation}}</td>
+                            <td>{% if orders.additionalprobleminfo %}{{orders.additionalprobleminfo}}{% else %} <center><h4>--</h4> </center>{% endif %}</td>
+                          <td>{{orders.date|date:"b-d-Y"}}<br><hr>{{orders.date|date:"H:i A"}}</td>
+
+
+                            <td><a href="{% url 'serv-serviceinvoice' orders.id  %}" > <i  class="fa-solid fa-eye px-2 py-3 fa-lg download-icon"></i></a></td>
+                            <td>{% if orders.completed %} <i  class="fa-solid fa-square-check px-2 py-3 fa-lg download-icon  " style="background-color: lightgreen;color: #008000a3;"></i>   {% else %}<a href="{% url 'serv-ordercompleted' orders.id %}" ><i  class="fa-solid fa-square-check px-2 py-3 fa-lg download-icon " style="background-color:#ff8e8e; color:#ff0000;"></i></a> {% endif %}</td>
+                        </tr>
+                      </tbody>
+
+                    {% endfor %}
+
+
+
+                    </table>
+                  </div>
+                    {% else %}
+                   <center> <img src="{% static 'serv/images/no-service.jpg' %}" style="height:25rem; width:35rem;"><br><h3>Oops No Service Requests Found!!!</h3></center>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

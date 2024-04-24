@@ -1,0 +1,156 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    input[type="file"] {
+  z-index: -1;
+  position: absolute;
+  opacity: 0;
+}
+
+.upload-image-btn{
+    color:white;
+    background-color:#4B49AC;
+    cursor:pointer;
+    border-radius:5px;
+    margin-left:135px;
+    margin-top:5px;
+    width:auto;
+
+}
+
+
+input:focus + label {
+  outline: 2px solid;
+}
+</style>
+
+<div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px; height:750px; width:100%; ">
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card" style="margin-top:100px; box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Update Your Products Here</h4>
+                     {{msg}}</center>
+                  <hr>
+                    <form class="forms-sample" method="POST" enctype="multipart/form-data" action="/stores/st-updateproduct/{{data.id}}">
+                      {%csrf_token%}
+                        <br>
+                        <div class="row d-flex justify-content-around">
+                         <div class="form-group col-6">
+                          <div class="form-group">
+
+                          <label for="exampleInputUsername1" style="margin-left:155px;font-size:18px; font-weight:500; padding:2px;border-radius:3px">Product Image</label><br>
+                            <img src="{{data.productimage.url}}" style="height:280px;width:400px; border-radius:6px;margin-left:15px">
+                              <input type="file" name="productimage" id="file-upload"  accept="image/jpeg, image/png"  title="Only JPG and PNG files are allowed"/>
+                                  <label for="file-upload" class="upload-image-btn py-1 px-3 " style="margin-top:15px; ">Change Product Image</label>
+                                  <div id="file-upload-filename" style="width:max-content" class="upload-image-btn px-2" ></div>
+
+                              </div>
+                             </div>
+
+                            <div class="col-6 form-group mt-1">
+                            <div class="row mt-4">
+
+                              <div class="form-group col-6 ">
+
+                                    <label for="exampleInputUsername1" >Product Name</label>
+                                    <input type="text" class="form-control" value="{{data.productname}}" name="productname" id="exampleInputUsername1" placeholder="Product name  " required pattern="[a-zA-Z0-9\s]*" title="Special characters are not allowed" maxlength="35">
+                                    <input  hidden="hidden" type="text" class="form-control" value="True" name="active" id="exampleInputUsername1" placeholder="Product name  " required>
+                              </div>
+
+                                  <div class="form-group col-6">
+                                    <label for="exampleInputConfirmPassword1">Product Price</label>
+                                    <input type="number" class="form-control"  value="{{data.productprice}}" name="productprice" id="exampleInputConfirmPassword1" placeholder="Price of product" required>
+                                  </div>
+
+
+                             <div class="form-group col-6">
+                            <label for="exampleInputEmail1">Change model here </label>
+                            <select class="form-control" name="usecategorylist" id="selectmodel" placeholder="Model Name"  onchange="car_model_selected()"  required>
+                                <option hidden="hidden" value="">Change Model</option>
+                                {% for model in cardata %}
+                                    <option value="{{ model.id }}" {% if model.id == data.usecategorylist.id %} selected {% endif %}> {{model.companyname}} ( {{ model.modelname }} ) </option>
+                                    <option class="hidden" id="{{model.id}}" value="{{model.companyname}}-{{model.modelyear}}-{{model.modelname}}" hidden="hidden"></option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                                </div>
+                        <div class="row">
+                        <div class="form-group col-4">
+
+                            <label for="exampleInputUsername1">Company Name</label>
+                            <input type="text" class="form-control" name="companyname" value="{{data.companyname}}" id="companyname" placeholder="Company name" readonly >
+                          </div>
+
+                          <div class="form-group col-4">
+                            <label for="exampleInputConfirmPassword1">Model year</label>
+                            <input type="text" class="form-control" name="modelyear" value="{{data.modelyear}}" id="modelyear" placeholder="model year" readonly>
+                          </div>
+
+                          <div class="form-group col-4">
+                            <label for="exampleInputConfirmPassword1">Model Name</label>
+                            <input type="text" class="form-control"  value="{{data.usecategorylist.modelname}}" id="modelname" placeholder="model name" readonly>
+                          </div>
+                            </div>
+
+
+
+                            </div>
+                        </div>
+
+                        <hr style="margin-top:-30px">
+                      <center>
+                        <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Update">
+                      </center>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+<script>
+var input = document.getElementById( 'file-upload' );
+var infoArea = document.getElementById( 'file-upload-filename' );
+
+input.addEventListener( 'change', showFileName );
+
+function showFileName( event ) {
+
+  // the change event gives us the input it occurred in
+  var input = event.srcElement;
+
+  // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
+  var fileName = input.files[0].name;
+
+  // use fileName however fits your app best, i.e. add it into a div
+  infoArea.textContent = 'Chosen File name: ' + fileName;
+}
+
+    function car_model_selected(){
+        console.log("Hello")
+
+        let selectedmodelid=document.getElementById("selectmodel").value
+        let cardet=document.getElementById(selectedmodelid).value
+        let car=cardet.split("-")
+        let companyname=document.getElementById("companyname")
+        companyname.value=car[0]
+        let modelyear=document.getElementById("modelyear")
+        modelyear.value=car[1]
+        let modelname=document.getElementById("modelname")
+        modelname.value=car[2]
+
+
+
+    }
+
+    document.getElementById("exampleInputConfirmPassword1").addEventListener("input", function() {
+    if (this.value.length > 7) {
+        this.value = this.value.slice(0, 7);
+    }
+});
+
+</script>
+{% endblock %}

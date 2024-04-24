@@ -1,0 +1,48 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+ <div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px;margin-left:-15px; height:580px; width:100%; ">
+
+          <div class="row">
+            <div class="col-md-11 grid-margin stretch-card" >
+              <div class="card" style="margin-top:100px; margin-left:55px;box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Update Your Use Category Here </h4>
+                 {{msg}}</center>
+                  <hr>
+                  <form class="forms-sample" method="POST" action="/stores/st-updateusecategory/{{data.id}}" >
+                      {% csrf_token%}
+                    <br>
+                    <div class="row d-flex justify-content-around">
+
+                          <div class="form-group col-4">
+
+                            <label for="exampleInputUsername1">Company of car</label>
+                            <input type="text" class="form-control" value="{{data.companyname}}" name="companyname" id="exampleInputUsername1" placeholder="Company name  "  required pattern="[a-zA-Z0-9\s]*" title="Special characters are not allowed" maxlength="35">
+                            <input hidden="hidden" type="text" class="form-control" value="True}" name="active" id="exampleInputUsername1" placeholder="Company name  " required>
+                          </div>
+
+                          <div class="form-group col-4">
+                            <label for="exampleInputEmail1">Model Name</label>
+                            <input type="text" class="form-control" value="{{data.modelname}}" name="modelname" id="exampleInputEmail1" placeholder="Model Name" required maxlength="30">
+                          </div>
+                          <div class="form-group col-4">
+                            <label for="exampleInputPassword1">Model Year</label>
+                            <input type="tel" class="form-control" value="{{data.modelyear}}" name="modelyear" id="exampleInputPassword1" placeholder="Year (e.g., 2024)" required pattern="\d{4}" maxlength="4" minlength="4" title="Please enter a four-digit year">
+                          </div>
+
+                    </div>
+
+                    <hr>
+                  <center>
+                    <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Update">
+
+                  </center>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+ </div>
+{% endblock %}

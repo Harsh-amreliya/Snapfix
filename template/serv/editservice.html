@@ -1,0 +1,120 @@
+{% extends "serv/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    input[type="file"] {
+  z-index: -1;
+  position: absolute;
+  opacity: 0;
+}
+
+.upload-image-btn{
+    color:white;
+    background-color:#4B49AC;
+    cursor:pointer;
+    border-radius:5px;
+    margin-left:178px;
+    margin-top:5px;
+    width:auto;
+
+}
+
+
+input:focus + label {
+  outline: 2px solid;
+}
+</style>
+
+<div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px; height:750px; width:100%; ">
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card ">
+              <div class="card mx-auto " style="margin-top:100px; min-width:50% !important; width:85% !important; box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body ">
+                 <center> <h4 class="card-title">Update Your Services Here</h4>
+                     {{msg}}</center>
+                  <hr>
+                    <form class="forms-sample" method="POST" enctype="multipart/form-data" action="/servicestore/serv-updateservice/{{data.id}}">
+                      {%csrf_token%}
+                        <br>
+                        <div class="row d-flex justify-content-around">
+                         <div class="form-group col-6 ">
+                          <div class="form-group">
+
+                          <label for="exampleInputUsername1" style="margin-left:197px;font-size:18px; font-weight:500; padding:2px;border-radius:3px">Service Image</label><br>
+                            <img src="{{data.serviceimage.url}}" style="height:280px;width:450px; border-radius:6px;margin-left:40px" >
+                              <input type="file" name="serviceimage" id="file-upload" />
+                                  <label for="file-upload" class="upload-image-btn py-1 px-3 " style="margin-top:15px; ">Change Service Image</label>
+                                  <div id="file-upload-filename" style="width:max-content;" class="upload-image-btn px-2" ></div>
+
+                              </div>
+                             </div>
+
+                    <div class="col-6 form-group mt-2">
+                        <div class="row mt-4 d-flex justify-content-center">
+
+                              <div class="form-group col-8 ">
+                                    <label for="exampleInputUsername1" >Service Name</label>
+                                    <input type="text" class="form-control" value="{{data.servicename}}" name="servicename" id="exampleInputUsername1" placeholder="Service name  ">
+                                    <input hidden="hidden" type="text" class="form-control" value="True" name="active" id="exampleInputUsername1" placeholder="Service name  ">
+                              </div>
+
+                              <div class="form-group col-8">
+                                    <label for="exampleInputConfirmPassword1">Service Price</label>
+                                    <input type="number" class="form-control" value="{{data.serviceprice}}" name="serviceprice" id="exampleInputConfirmPassword1" placeholder="Price of service">
+                              </div>
+
+                              <div class="form-group col-8">
+                                <label for="exampleInputUsername1"> Average Time Needed</label>
+                                <input type="text" class="form-control" name="avgtime" value="{{data.avgtime}}"  placeholder="Eg: 3 Hours"  >
+                              </div>
+
+                            <div class=" col-8">
+
+                                <input type="checkbox" class="mt-1" style="border:none !important;" name="towable" value="1" {% if data.towable %}checked{% endif %}> <span>Towing required</span>
+
+                              </div>
+
+                         </div>
+
+
+                    </div>
+                        </div>
+
+                        <hr style="margin-top:-30px">
+                      <center>
+                        <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Update">
+                      </center>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+<script>
+var input = document.getElementById( 'file-upload' );
+var infoArea = document.getElementById( 'file-upload-filename' );
+
+input.addEventListener( 'change', showFileName );
+
+function showFileName( event ) {
+
+  // the change event gives us the input it occurred in
+  var input = event.srcElement;
+
+  // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
+  var fileName = input.files[0].name;
+
+  // use fileName however fits your app best, i.e. add it into a div
+  infoArea.textContent = 'Chosen File name: ' + fileName;
+}
+    document.getElementById("exampleInputConfirmPassword1").addEventListener("input", function() {
+    if (this.value.length > 7) {
+        this.value = this.value.slice(0, 7);
+    }
+});
+
+</script>
+
+{% endblock %}

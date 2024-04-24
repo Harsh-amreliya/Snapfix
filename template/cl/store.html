@@ -1,0 +1,212 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+
+    .no-data-found-container{
+    grid-column:1/ span 4;
+    }
+
+</style>
+<div class="main-app-outer w-100 ">
+
+    <div class="my-sidebar p-2">
+        <div class="my-sidebar-inner">
+            <div class="image-container wow fadeInUp" data-wow-delay="0.1s">
+                <img src="{{data.imageofstore.url}}"
+                    alt="logo" class="img-fluid">
+            </div>
+            <div class="store-details-container wow fadeInUp" data-wow-delay="0.3s">
+                <div class="d-flex justify-content-between ">
+                    <h2 class="my-3">{{data.storename}}</h2><span class="bg-danger text-white p-1 mt-">Busy for 30min</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-clock text-primary"></i><span>{{ data.openingtime}} &nbsp;&nbsp;- &nbsp;&nbsp;{{data.closingtime}}</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-envelope text-primary"></i><span>{{data.email}}</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-phone text-primary"></i><span>{{data.storecontact}}</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-location-dot text-primary"></i><span>{{data.storeaddress}}</span>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="main-app-inner">
+        <!-- Fact Start -->
+        <div class="container-fluid fact bg-dark py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.1s">
+                        <i class="fa fa-check fa-2x text-white mb-3"></i>
+                        <h2 class="text-white mb-2" data-toggle="counter-up">10</h2>
+                        <p class="text-white mb-0">Years Experience</p>
+                    </div>
+                    <div class="col-md-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.3s">
+                        <i class="fa fa-users-cog fa-2x text-white mb-3"></i>
+                        <h2 class="text-white mb-2" data-toggle="counter-up">21</h2>
+                        <p class="text-white mb-0">Expert Technicians</p>
+                    </div>
+                    <div class="col-md-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.5s">
+                        <i class="fa fa-users fa-2x text-white mb-3"></i>
+                        <h2 class="text-white mb-2" data-toggle="counter-up">357</h2>
+                        <p class="text-white mb-0">Satisfied Clients</p>
+                    </div>
+                    <div class="col-md-6 col-lg-3 text-center wow fadeIn" data-wow-delay="0.7s">
+                        <i class="fa fa-car fa-2x text-white mb-3"></i>
+                        <h2 class="text-white mb-2" data-toggle="counter-up">360</h2>
+                        <p class="text-white mb-0">Compleate Projects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fact End -->
+        <!-- service start -->
+        <div class="container-fluid py-3 bg-gray services-container-outer">
+            <div class="list-icon-container text-white bg-primary p-3" id="list-icon-container">
+                <i class="fa-solid fa-clipboard-list fa-2xl"></i>
+            </div>
+
+            <h2 class=" text-center text-primary">{% if servicedata %}Our Services{% elif productdata %}Our Products{% endif %}</h2>
+
+            <div class="services-container container my-3 ">
+
+            {% if servicedata  %}
+                {% for d in servicedata %}
+                    <div class="service position-relative p-0 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="service-image-container">
+                            <img src="{{d.serviceimage.url}}" alt="">
+                        </div>
+                        <div class="service-details-container px-2 py-1">
+                            <h3>{{d.servicename}}</h3>
+
+                            <span>Avg. Time: {{d.avgtime}}</span><br>
+                            <span class="text-danger" style="font-size:14px;">{% if d.towable %}Towing required *{% endif %}</span>
+
+                        </div>
+                        <div class="d-flex justify-content-between mt-2 w-100 px-2  stick-down">
+
+                            <div>
+                                <h5 class="price text-white bg-success p-1">₹ {{d.serviceprice}}</h5>
+                            </div>
+
+                            <div class="p-1 add-icon-container text-blue"
+                                 style="height:max-content;">
+
+                                    <span>
+
+<!--                                        <form method="post" action="/client/cl-addtocartservice/{{d.id}}{{storeid}}">-->
+<!--                                            {% csrf_token %}-->
+                                        <button type="button" >{% if d.id in cart %}added✅{% else %} <span class="add-to-cart-text-{{d.id}} add-to-cart-text d-flex align-items-center gap-2" onclick="addtocart({{d.id}},{{storeid}},0)"> <i class="fa-solid fa-cart-plus"></i> Add to Cart</span>{% endif %}</button>
+<!--                                        </form>-->
+
+
+
+                                    </span>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            {% elif productdata %}
+                {% for d in productdata %}
+                    <div class="service position-relative p-0 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="service-image-container">
+                            <img src="{{d.productimage.url}}" alt="">
+                        </div>
+                        <div class="service-details-container px-2 py-1">
+                            <h3>{{d.productname}}</h3>
+                            <span>For : {{d.companyname}} ({{d.usecategorylist.modelname}})</span><br>
+                            <span>Model year : {{d.modelyear}}</span>
+
+                        </div>
+                        <div class="d-flex justify-content-between mt-2 w-100 px-2  stick-down">
+
+                            <div>
+                                <h5 class="price text-white bg-success p-1">₹ {{d.productprice}}</h5>
+                            </div>
+
+                            <div class="p-1 add-icon-container text-blue" onclick="addButtonClicked()"
+                                 style="height:max-content;">
+
+                                    <span>
+                                        <button type="button" >{% if d.id in cart %}added✅{% else %} <span class="add-to-cart-text-{{d.id}} add-to-cart-text d-flex align-items-center gap-2" onclick="addtocart({{d.id}},{{storeid}},1)"> <i class="fa-solid fa-cart-plus"></i> Add to Cart</span>{% endif %}</button>
+                                    </span>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                            <div class="mt-2  d-flex flex-column mx-auto no-data-found-container">
+                                <img src="{% static 'cl/img/no-data-found.jpg' %}" style="height:20rem; width:30rem; "><br>
+                                <h2 class=" text-center text-primary">Sorry no items listed yet!!!!!</h2>
+                            </div>
+            {% endif %}
+
+            </div>
+            <!-- service end -->
+        </div>
+    </div>
+</div>
+
+<script>
+    let listIconContainer = document.getElementById("list-icon-container")
+    let listContainer = document.getElementById("list-container")
+    listIconContainer.addEventListener("click", () => {
+        listContainer.style.transform = "translateX(0)";
+    })
+
+    let closeIcon = document.getElementById("close-icon")
+    closeIcon.addEventListener("click", () => {
+        listContainer.style.transform = "translateX(100%)";
+    })
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 200 && window.scrollY < 1000) {
+            listIconContainer.style.display = "inline";
+        } else {
+            listIconContainer.style.display = "none";
+        }
+    })
+
+   function addtocart(id,storeid,type){
+   let xhr = new XMLHttpRequest()
+    let add_to_cart_text=document.querySelector(`.add-to-cart-text-${id}`)
+    if(type){
+
+        xhr.open("GET", "/client/cl-addtocartproduct/" + id + storeid, true);
+        xhr.onload = function () {
+            if (this.status === 200) {
+                let text = JSON.parse(this.responseText)
+                add_to_cart_text.innerText=`${text.message}✅`
+            }
+        }
+        xhr.send();
+    }
+
+    else{
+        xhr.open("GET", "/client/cl-addtocartservice/" + id + storeid, true);
+        xhr.onload = function () {
+            if (this.status === 200) {
+                let text = JSON.parse(this.responseText)
+                add_to_cart_text.innerText=`${text.message}✅`
+            }
+        }
+        xhr.send();
+}
+   }
+
+</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+    @page {
+    size: A4; /* or letter, legal, etc. */
+    margin: 0;
+  }
+
+    .right{
+        text-align:right;
+        width:160px;
+    }
+    .center{
+        text-align:center;
+    }
+    tbody tr{
+        border-bottom: 1px solid grey;
+    }
+    tbody td{
+        padding:0.5rem 0;
+    }
+    .line-height{
+        line-height:1.5rem;
+    }
+    .grey{
+        background-color:lightgrey;
+    }
+</style>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5 p-0" style="background-image: url({% static 'cl/img/carousel-bg-1.jpg' %});">
+        <div class="container-fluid page-header-inner py-5">
+            <div class="container text-center">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Contact</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+
+
+ <div class="d-flex justify-content-center " style="background-image: url('{% static 'st/images/form-bg.png'%}'); padding:5.5rem 0;">
+
+          <div class="card w-75" style=" border-radius:10px; box-shadow:6px 6px 15px grey;">
+                  <center> <h4 class="card-title mt-4"> Invoice </h4>
+                 {{msg}}</center>
+                   <hr>
+                <div class="card-body" id="myBillingArea">
+
+
+
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <label class="card-title text-primary" style="font-size:30px">{{storedetails.storename}} </label>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                            <label>{{storedetails.storeaddress}}</label><br>
+                            <label><i class="fa-solid fa-phone-volume"></i> {{storedetails.storecontact}}</label>
+                            </div>
+                            <div class="col-12 text-center card-title text-primary">
+                                Invoice: #{{orderdata.id}}
+                            </div>
+                        </div>
+                    <hr style="border:1px solid grey" class="mt-4">
+
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-4">
+                                <b class="text-primary">Bill To:    </b><br>
+                                {{orderdata.user}} <br>
+                                {{orderdata.clientlocation}} <br>
+                                {{orderdata.user.email}} <br>
+                                {{orderdata.contact}} <br>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end">
+                                <div class="ms-auto">
+                                    <b class="text-primary">Invoice Date: {{orderdata.date}} </b><br>
+                                    Due Date: On Delivery
+                                </div>
+                            </div>
+
+                        </div>
+                    <hr style="border:1px solid grey" class="mt-3">
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <table class="w-100 border-">
+                                    <thead>
+                                    <tr class="grey ">
+                                        <th class="px-2"> Service Name </th>
+                                        <th class="right px-2"> Price </th>
+                                    </tr>
+                                    </thead>
+                                    {% for d in servicedata %}
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-secondary px-2">{{d.servicename}}</td>
+                                            <td class="right text-secondary  px-2">₹ {{d.serviceprice}}</td>
+
+                                        </tr>
+
+                                    </tbody>
+                                    {% endfor %}
+
+                                </table>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end mt-3">
+
+                                <div class=" col-6 line-height p-0">
+                                    <b class="text-primary">Payment Type: Cash on delivery</b>
+                                </div>
+
+                                <div class="d-flex justify-content-end col-6 p-0">
+                                    <div class=" line-height">
+                                        Subtotal: ₹ {{amount}} <br>
+                                        {% if towing %}
+                                        Towing charges: ₹ 300<br>
+                                        Final amount: ₹ {{totlamount}}<br>
+                                        {% endif %}
+
+                                        Tax(18%): ₹ {{gst}} <br>
+                                       <b class="text-primary"> Total: ₹ {{amtwithgst}}</b>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <hr style="border:1px solid grey">
+                                    <b class="text-primary">{{words}} Rupees.</b>
+                                <hr style="border:1px solid grey">
+                            </div>
+
+                            <div class="col-12">
+                                <label style="color:grey; font-size:13px;">Note: This invoice is generated by system(Snapfix).</label>
+                            </div>
+                        </div>
+
+                        <br>
+
+
+                </div>
+                   <input type="submit" class=" btn btn-primary mr-2 t-1-07 w-25 mx-auto mb-4" onclick="downloadPDF(123)" value="Download">
+
+              </div>
+ </div>
+
+
+        </div>
+    </div>
+    <!-- Contact End -->
+<script>
+    window.jsPDF = window.jspdf.jsPDF;
+var docPDF = new jsPDF();
+
+function downloadPDF(invoiceNo){
+
+    var elementHTML = document.querySelector("#myBillingArea");
+    docPDF.html(elementHTML, {
+        callback: function(docPDF) {
+            docPDF.save(invoiceNo+'.pdf',{ autoDownload: true });
+        },
+        x: 5,
+        y: 10,
+        width: 200,
+        windowWidth: 630
+    });
+}
+</script>
+
+{% endblock %}

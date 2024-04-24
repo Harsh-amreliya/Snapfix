@@ -1,0 +1,376 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+
+<style xmlns="http://www.w3.org/1999/html">
+    .team-overlay {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .services-store-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    .checkout-link {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.4rem 4rem;
+        background-color: #D81324;
+        color: white;
+        align-items: center;
+        width: fit-content;
+        transition: all 0.7s;
+    }
+
+    .checkout-link:hover {
+        color: white;
+        transform: scale(1.06);
+    }
+
+    .checkout-link:hover i {
+        transform: translateX(0.4rem);
+    }
+
+    .selected-cart-list {
+        position: relative;
+        padding-bottom: 0.2rem;
+    }
+
+    .selected-cart-list::after {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        content: "";
+        transition: all 0.7s;
+        border-bottom: 3px solid #0B2154;
+        transform: scaleX(0);
+
+    }
+
+    .selected-cart-list:hover::after {
+        transform: scaleX(1);
+
+    }
+
+    .selected-cart-list-active::after {
+        transform: scaleX(1) !important;
+    }
+    .service-store-active{
+     border:2px solid red !important;
+    }
+</style>
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 p-0"
+    style="background-image: url({% static 'cl/img/carousel-bg-1.jpg' %});">
+    <div class="container-fluid page-header-inner py-5">
+        <div class="container text-center">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Cart</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Cart</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<div class="d-flex justify-content-center gap-5 ">
+    <h2 class="mb-5 wow fadeIn selected-cart-list selected-cart-list-active" id="service-list" data-wow-delay="0.1s">
+        Service List</h2>
+    <h2 class="mb-5 wow fadeIn selected-cart-list" id="product-cart" data-wow-delay="0.1s">Product Cart</h2>
+</div>
+<hr>
+<div class="col-lg-12 grid-margin stretch-card wow fadeIn" data-wow-delay="0.2s">
+    <div class="card" style="border-style:none !important;">
+        <div class="card-body">
+            <!--                 <center> <h4 class="card-title">Manage Cart Here</h4></center>-->
+            <!--                  <hr>-->
+            <p class="card-description">
+                <!--                    Add class <code>.table-hover</code>-->
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="table-responsive ">
+                    <table class="table w-100 table-hover  " id="product-cart-details">
+                        <tr class="cart-item">
+
+                            <thead id="thead">
+                                <tr>
+                                    <th class="card-title">Product ID</th>
+                                    <th class="card-title">Product Image</th>
+                                    <th class="card-title">Product Name</th>
+                                    <th class="card-title">Price</th>
+                                    <th class="card-title">Towing required</th>
+                                    <th class="card-title">Delete</th>
+                                </tr>
+                            </thead>
+
+                            <div class="services-store-container my-3 ">
+                                {% for key, values in storeobj.items %}
+                                <button type="button" class=" service-store-active-{{key}} p-0 wow fadeIn shadow p-3 text-start"
+                                    data-wow-delay="0.1s" onclick="selected_store({{key}})">
+                                    <h3 class="text-primary">{{ values.storename }}</h3>
+                                    <div class="d-flex justify-content-between">
+                                        <span>services: {{values.services}}</span>
+                                        <span class="text-danger">{% if values.towing %}Towing required*{% endif %}</span>
+                                    </div>
+                                </button>
+                                {% endfor %}
+                            </div>
+
+
+
+
+
+                            <tbody id="tbody">
+
+                            </tbody>
+
+
+                    </table>
+
+                </div>
+            </form>
+            <div id="paymentbutton">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+
+    let tbody = document.getElementById('tbody')
+    let thead = document.getElementById('thead')
+    let services_store_container = document.querySelector(`.services-store-container`)
+    function selected_store(storeid) {
+        console.log(storeid)
+        let service_store_active=document.querySelector(`.service-store-active`)
+        let current_service_store=document.querySelector(`.service-store-active-${storeid}`)
+        if (service_store_active){
+            service_store_active.classList.remove('service-store-active')
+        }
+
+        if(current_service_store){
+
+            current_service_store.classList.add('service-store-active')
+        }
+        
+
+
+
+        let xhr = new XMLHttpRequest()
+        if (storeid) {
+
+            xhr.open("GET", "/client/cl-dynamiccartdata/" + "{{request.user.id}}" + storeid, true);
+        }
+        else {
+            xhr.open("GET", "/client/cl-dynamiccartdata/" + "{{request.user.id}}" + 0, true);
+        }
+
+        xhr.onload = function () {
+
+
+            tbody.innerHTML = ""
+            if (this.status === 200) {
+                let combined_data = JSON.parse(this.responseText)
+                let storeid2 = 0
+                let storedata = combined_data.listdetails
+                let servempty = combined_data.noservice['servempty']
+                for (let a in storedata) {
+                    storeid2 = storedata[a].storeid
+                    tbody.innerHTML += `<tr class="cart-items  wow fadeIn" data-wow-delay="0.2s">
+                                  <td style="vertical-align: middle;" >${storedata[a].serviceid}</td>
+                                  <td class="py-2" style="vertical-align: middle;" > <img src="${storedata[a].serviceimage}" alt="image" style="height:65px; width:90px; border-radius:5px;"/></td>
+                                    <td class="" style="vertical-align: middle;">${storedata[a].servicename}</td>
+                                  <td class="text-success " style="vertical-align: middle;">₹ ${storedata[a].serviceprice}</td>
+
+                                  <td class="px-5"  style="vertical-align: middle;"> ${storedata[a].towable ? '<i class="fa-solid fa-check fa-xl text-success"></i>' : '<i class="fa-solid fa-xmark fw-bold fa-xl text-danger"></i>'}</td>
+                                    <td style="vertical-align: middle;"><a href="http://127.0.0.1:8000/client/cl-removeservice/${storedata[a].serviceid}${storedata[a].storeid}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-trash-can fa-lg"></i></a></td>
+                                </tr>`
+                }
+                console.log(servempty)
+
+                if (servempty) {
+                    paymentbutton.innerHTML = ` <center>
+                    <div class="checkout-btn-container mt-3" style="height: 20%;">
+                        <a class="checkout-link" href="http://127.0.0.1:8000/client/cl-payment/${storeid2}service "><span>Checkout</span><i class="fa-solid fa-arrow-right checkout-right-arrow"></i></a>
+
+                    </div>
+                </center>`
+                }
+                else {
+                    thead.innerHTML = ` <img src="{% static 'cl/img/empty-cart.jpg' %}" style="height:20rem; width:30rem; margin-left:30rem;" > `
+                    paymentbutton.innerHTML = ` <center> <h2>Oops your service list is empty !!!</h2> </center> `
+                }
+            }
+            else {
+                console.log("some error occured");
+            }
+        }
+        xhr.send();
+
+
+    }
+
+    window.addEventListener("load", () => {
+        selected_store({{ storeid }})
+    });
+
+    let selected_service_cart = document.getElementById('service-list')
+    let selected_product_cart = document.getElementById('product-cart')
+
+    selected_service_cart.addEventListener("click", () => {
+        selected_product_cart.classList.remove('selected-cart-list-active')
+        selected_service_cart.classList.add('selected-cart-list-active')
+
+        window.location.href = 'http://127.0.0.1:8000/client/cl-dynamicproduct/{{request.user.id}}service'
+
+    });
+
+    selected_product_cart.addEventListener("click", () => {
+        services_store_container.innerHTML="",
+        selected_product_cart.classList.add('selected-cart-list-active')
+        selected_service_cart.classList.remove('selected-cart-list-active')
+        let data = document.getElementById('product-cart-details')
+        data.innerHTML = "";
+        let xhr = new XMLHttpRequest()
+        xhr.open("GET", "/client/cl-dynamicproduct/" + "{{request.user.id}}" + "product", true);
+
+        xhr.onload = function () {
+
+
+
+            if (this.status === 200) {
+                let storedata = JSON.parse(this.responseText)
+
+
+
+                data.innerHTML = `<thead >
+                        <tr>
+                          <th class="card-title">Product ID</th>
+                          <th class="card-title">Product Image</th>
+                          <th class="card-title">Product Name</th>
+                          <th class="card-title">Quantity</th>
+                          <th class="card-title">Price</th>
+                          <th class="card-title">Total Price</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>`
+                let productstoreid = 0
+                let isempty = storedata['isempty']
+                delete storedata["isempty"]
+                console.log(storedata)
+                for (let a in storedata) {
+                    productstoreid = storedata[a].storeid
+
+                    data.innerHTML += ` <tbody>
+                        <tr class="cart-items  wow fadeIn" data-wow-delay="0.2s">
+                          <td style="vertical-align: middle;" >${storedata[a].productid}</td>
+                          <td hidden="hidden" ><input type="text" readonly value="${storedata[a].cartid}"  name="cart" style="width:35px; text-align:center; border:none; background-color:#d8d8d8; border-radius:5px; "></td>
+                          <td class="py-2" style="vertical-align: middle;" > <img src="${storedata[a].productimage}" alt="image" style="height:65px; width:90px; border-radius:5px;"/></td>
+                            <td class="" style="vertical-align: middle;">${storedata[a].productname}</td>
+                          <td style="vertical-align: middle;">
+                            <button type="button" class="decrement" onclick="decrementQuantity(${storedata[a].cartid})">
+                                ➖
+                            </button> &nbsp;&nbsp;
+                            <input type="text" readonly value="${storedata[a].quantity}" data-price="${storedata[a].productprice}" class="quantity quantity-${ storedata[a].cartid }" name="quantity" style="width:35px; text-align:center; border:none; background-color:#d8d8d8; border-radius:5px; "> 
+                            &nbsp;&nbsp; 
+                            <button type="button" class="increment" onclick="incrementQuantity(${storedata[a].cartid})">
+                                ➕</button>
+                        </td>
+                        <td class="text-success " style="vertical-align: middle;">₹ ${storedata[a].productprice}</td>
+                        <td class="text-danger" style="vertical-align: middle;" > ₹&nbsp;
+                            <span  class="total-price-${storedata[a].cartid}" data-price="${storedata[a].productprice}">
+                                ${storedata[a].productprice * storedata[a].quantity}
+                            </span> 
+                            <i class="ti-arrow-down"></i>
+                        </td>
+                            
+                        <td style="vertical-align: middle;">
+                            <a href="http://127.0.0.1:8000/client/cl-removeproduct/${storedata[a].productid}${storedata[a].storeid}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i class="fa-regular fa-trash-can fa-lg"></i>
+                            </a>
+                        </td>
+                        </tr>
+                      </tbody>`
+                }
+                if (isempty) {
+
+                    paymentbutton.innerHTML = ` <center>
+                    <div class="checkout-btn-container mt-3" style="height: 20%;">
+                        <a class="checkout-link" href="http://127.0.0.1:8000/client/cl-payment/${productstoreid}product "><span>Checkout</span><i class="fa-solid fa-arrow-right checkout-right-arrow"></i></a>
+
+
+                    </div>
+                </center>`
+
+                }
+                else {
+                    data.innerHTML = ` <img src="{% static 'cl/img/empty-cart.jpg' %}" style="height:20rem; width:30rem; margin-left:30rem;" > `
+                    paymentbutton.innerHTML = ` <h2 class=" text-center">Oops your cart is empty!!!</h2>`
+                }
+            }
+            else {
+                console.log("some error occured");
+            }
+        }
+        xhr.send();
+    });
+
+
+
+   
+        
+        function incrementQuantity(cartid) {
+            let xhr = new XMLHttpRequest()
+            
+            let quantityInput = document.querySelector(`.quantity-${cartid}`);
+            console.log(quantityInput)
+            let quantity = parseInt(quantityInput.value);
+            quantity++;
+            quantityInput.value = quantity;
+            updateTotalPrice(cartid, quantity);
+            xhr.open("GET", "/client/cl-updatequantity/" + cartid + "/increment", true);
+            xhr.send();
+        }
+
+        function decrementQuantity(cartid) {
+            let xhr = new XMLHttpRequest()
+            let quantityInput = document.querySelector(`.quantity-${cartid}`);
+            let quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+                quantity--;
+                quantityInput.value = quantity;
+                updateTotalPrice(cartid, quantity);
+                xhr.open("GET", "/client/cl-updatequantity/" + cartid + "/decrement", true);
+                xhr.send();
+            }
+        }
+
+        function updateTotalPrice(cartid, quantity) {
+            let price = document.querySelector(`.total-price-${cartid}`).getAttribute("data-price");
+            let totalPrice = document.querySelector(`.total-price-${cartid}`);
+            console.log(quantity)
+            console.log(price)
+            totalPrice.innerText=`${price * quantity}`;
+        }
+
+</script>
+{% endblock %}

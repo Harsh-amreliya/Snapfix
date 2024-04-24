@@ -1,0 +1,38 @@
+<!-- location_app/templates/location_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Form</title>
+</head>
+<body>
+    <h2>Submit your location</h2>
+    <form method="post" action="{% url 'get_location' %}">
+        {% csrf_token %}
+        <label for="latitude">Latitude:</label>
+        <input type="text" name="latitude" id="latitude" readonly>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" name="longitude" id="longitude" readonly>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+        }
+
+        // Get location when the page loads
+        getLocation();
+    </script>
+</body>
+</html>

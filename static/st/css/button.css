@@ -1,0 +1,16 @@
+.t-1-07{
+    transition:0.7s !important
+}
+
+.t-1-07:hover{
+    transform:scale(1.1)
+}
+
+.dashheight{
+    margin-top:15px !important;
+}
+
+.form-bg{
+    background-image: url("{% 'st/images/form-bg.png'%}");
+
+}

@@ -1,0 +1,248 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+    .team-overlay {
+        background-color: rgb(0, 0, 0, 0.4) !important;
+    }
+
+    .filter-container span:hover,
+    .filter-active {
+        color: #0B2154;
+    }
+
+    .filter-container {
+        position: relative;
+        margin-bottom: 1rem;
+        height: max-content;
+    }
+
+    .switch-stores {
+        position: absolute !important;
+        right: 0;
+
+    }
+
+
+    .filter-active::after {
+        transform: scaleX(1) !important;
+    }
+
+    .filter-container span {
+        position: relative;
+        transition: all 0.7s;
+        padding-bottom: 0.3rem;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .filter-container span::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        content: "";
+        transition: all 0.7s;
+        border-bottom: .1rem solid #0B2154;
+        transform: scaleX(0);
+
+    }
+
+    .filter-container span:hover::after {
+        transform: scaleX(1);
+    }
+
+
+    .custom-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .toggle-label {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .toggle-checkbox {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .toggle-slot {
+        position: relative;
+        height: 3em;
+        width: 6em;
+        background-color: #fff;
+        border-radius: 1.5em;
+        transition: background-color 250ms;
+    }
+
+    .toggle-checkbox:checked+.toggle-slot {
+        background-color: #374151;
+    }
+
+    .icon-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 0.5em;
+        transform: translateY(-50%);
+    }
+
+    .location-icon {
+        height: 2em;
+        width: 2em;
+        color: white;
+        transition: transform 500ms cubic-bezier(.26, 2.5, .46, .71);
+    }
+
+    .toggle-checkbox:checked+.toggle-slot .location-icon {
+        transform: translateX(3em);
+    }
+
+    .toggle-button {
+        position: absolute;
+        top: 0.25em;
+
+        height: 2.5em;
+        width: 2.5em;
+        border-radius: 50%;
+        background-color: #ffeccf;
+        box-shadow: inset 0px 0px 0px 0.5em #ffbb52;
+        transition: background-color 250ms, box-shadow 250ms, transform 500ms cubic-bezier(.26, 2, .46, .71);
+    }
+
+    .toggle-checkbox:checked+.toggle-slot .toggle-button {
+        background-color: #485367;
+        box-shadow: inset 0px 0px 0px 0.5em white;
+        transform: translateX(3.25em);
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    .smalltext {
+        font-size: 14px;
+
+    }
+
+
+</style>
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 p-0"
+    style="background-image: url({% static 'cl/img/carousel-bg-2.jpg' %});">
+    <div class="container-fluid page-header-inner py-5">
+        <div class="container text-center">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Stores</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Stores</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="filter-text-container d-flex justify-content-center">
+        <h3 class="mx-5 filter-active" id="servicestore-fetch">Service store</h3>
+        <h3 class="mx-5" id="productstore-fetch">Product store</h3>
+    </div>
+</div>
+
+<div class="stores-container container my-4 mx-auto row g-4" id="fetch-store-container">
+    {% for d,totalproducts in maindata %}
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="team-item">
+                        <div class="position-relative overflow-hidden " style="height:260px;">
+                            <img class="img-fluid " src="{{ d.imageofstore.url }}" alt="" style="height:100%;width:100%;">
+                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100 flex-column">
+                                 <h2 class="text-white"> Total Services</h2>
+                                 <h1 class="text-primary btn btn-square fs-3 mx-1">{{totalproducts}}</h1>
+
+                                </div>
+                        </div>
+                        <div class="bg-light p-4">
+                            <h5 class="fw-bold  text-left my-1 mb-0"><i class="fa-solid fa-shop me-2 fa-sm"></i>{{d.storename}}</h5>
+                            <span class="text-left d-block my-1 smalltext"><i
+                                    class="fa-solid fa-phone ms-1 me-3"></i>{{d.storecontact}}</span>
+                            <span class="text-left d-block my-1 smalltext"><i
+                                    class="fa-solid fa-envelope ms-1 me-3"></i>{{d.email}}</span>
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-location-dot ms-1 me-3"></i>
+                                <span class="text-left w-100 my-1 smalltext ">{{d.storeaddress}}</span>
+                            </div>
+                            <div class="d-flex justify-content-end"><a href="{% url 'cl-stores' d.id %}"
+                                    class="text-decoration-none bg-primary text-white p-2 ">View more <i
+                                        class="fa-solid fa-arrow-right-long ms-1 mt-2"></i></a></div>
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+
+    </div>
+
+<script>
+
+    let servicestorefetch = document.getElementById("servicestore-fetch")
+    let productstorefetch = document.getElementById("productstore-fetch")
+    servicestorefetch.addEventListener("click", () => {
+        servicestorefetch.classList.add("filter-active")
+        productstorefetch.classList.remove("filter-active")
+        fetchStores("service")
+    })
+    productstorefetch.addEventListener("click", () => {
+        productstorefetch.classList.add("filter-active")
+        servicestorefetch.classList.remove("filter-active")
+        fetchStores("product")
+    })
+    function fetchStores(storetype) {
+        console.log("working")
+        let xhr = new XMLHttpRequest()
+        xhr.open("GET", "/client/cl-fetchstore/" + storetype, true);
+
+        xhr.onload = function () {
+            if (this.status === 200) {
+                let storedata = JSON.parse(this.responseText)
+                let fetchstorecontainer = document.getElementById("fetch-store-container")
+                fetchstorecontainer.innerHTML = "";
+                for (let d in storedata) {
+                    fetchstorecontainer.innerHTML += `<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="team-item">
+                        <div class="position-relative overflow-hidden " style="height:260px;">
+                            <img class="img-fluid "  src="${storedata[d].imageofstore}" alt="" style="height:100%;width:100%;">
+                            <div class="team-overlay position-absolute start-0 top-0 w-100 h-100 flex-column">
+                                 <h2 class="text-white"> Total ${storetype}s</h2>
+                                 <h1 class="text-primary btn btn-square fs-3 mx-1">${storedata[d].totalproducts? storedata[d].totalproducts : 0 }</h1>
+
+                                </div>
+                        </div>
+                        <div class="bg-light text-center p-4">
+                            <h5 class="fw-bold  text-left my-1 mb-0"><i class="fa-solid fa-shop me-2 fa-sm" ></i>${storedata[d].storename}</h5>
+                            <span class="text-left d-block my-1 smalltext"><i class="fa-solid fa-phone ms-1 me-3"></i>${storedata[d].storecontact}</span>
+                            <span class="text-left d-block my-1 smalltext"><i class="fa-solid fa-envelope ms-1 me-3"></i>${storedata[d].email}</span>
+                            <span class="text-left d-block w-100 my-1 smalltext"><i class="fa-solid fa-location-dot ms-1 me-3"></i>${storedata[d].storeaddress}</span>
+                            <div class="d-flex justify-content-end"><a href="http://127.0.0.1:8000/client/cl-${(storetype == 'product')? 'product' : 'stores'}/${storedata[d].id}" class="text-decoration-none bg-primary text-white p-2 ">View more <i class="fa-solid fa-arrow-right-long ms-1 mt-2"></i></a></div>
+                        </div>
+                    </div>
+                </div>`
+
+                }
+            }
+            else {
+                console.log("some error occured");
+            }
+        }
+        xhr.send();
+
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    .team-overlay{
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+    .towing-truck{
+     display:flex;
+     overflow:hidden;
+    }
+    .towing-truck div{
+     margin-top:-1.5rem;
+     width:150px;
+     aspect-ratio:3/2;
+     display:flex;
+     z-index:-1;
+     transform:translateX(100vw);
+     animation:move-truck 7s linear;
+    }
+
+    @keyframes move-truck{
+     from{transform:translateX(100vw);}
+     to{transform:translateX(-10vw);}
+    }
+
+    .towing-truck div img{
+     width:100%;
+    }
+</style>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5 p-0" style="background-image: url({% static 'cl/img/carousel-bg-1.jpg' %});">
+        <div class="container-fluid page-header-inner py-5">
+            <div class="container text-center">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">{% if p %}Order Placed Successfully {% else %} Service Requested Successfully {% endif %}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Confirmed</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    {% if s %}
+    <!-- Service Start -->
+     <div class="towing-truck">
+         <div><img src="{% static 'cl/img/red-truck-towing.jpg' %}"></div>
+
+     </div>
+
+        <h3 class="text-center" style="margin-top:-2rem">Your Service Request has been placed successfully !!!<br>Don't worry, Our team will be there soon...</h3>
+        <div class="container-xxl d-flex justify-content-evenly ">
+                <img src="{% static 'cl/img/towing-img.jpg' %}" style="height:19.5rem; width: 30rem;">
+                <img src="{% static 'cl/img/car-servicing-roadside.jpg' %}" style="height:20rem; width: 24rem;">
+    </div>
+{% else %}
+        <h3 class="text-center" style="margin-top:-2rem">Your Order has been placed successfully !!!</h3>
+        <div class="container-xxl d-flex justify-content-evenly ">
+                <img src="{% static 'cl/img/order-confirmed.jpg' %}" style="height:25rem; width: 28rem;">
+        </div>
+
+{% endif %}
+
+    <!-- Service End -->
+
+
+    
+        
+
+{% endblock %}

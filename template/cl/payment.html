@@ -1,0 +1,204 @@
+{% extends "cl/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    .team-overlay{
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+</style>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5 p-0" style="background-image: url({% static 'cl/img/carousel-bg-1.jpg' %});">
+        <div class="container-fluid page-header-inner py-5">
+            <div class="container text-center">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Confirm Service</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item"><a href="{% url 'cl-index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Confirm Service</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+         <div class="container-fluid bg-secondary booking my-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row gx-5">
+            <div class="col-lg-6 py-5">
+                <div class="py-5">
+                    <h1 class="text-white mb-4">Have a  <span
+                            style="color:#D81324; font-size:58px;">Good day</span> </h1>
+                    <p class="text-white mb-0">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum.
+                        Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero
+                        eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit.
+                        Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-primary h-100 d-flex flex-column justify-content-center text-center py-4 wow zoomIn"
+                    data-wow-delay="0.6s">
+                    <h1 class="text-white w-100 mb-3">Thanks,{% if istowable %} Team will be there soon.{% else %} visit again.{% endif %}</h1><br>
+                    <h4 class="text-white" style="margin-top:-27px;">{{storename}}{% for a in productstorename %}{{a}},&nbsp;&nbsp;{% endfor %}</h4>
+                    <h5 class="text-white" >{% if isservice %} Total no of Services: {{totalitems}} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Payable Amount: ₹ {{totalamount}}{% else %}Total no of Products: {{totalitems}} &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Payable Amount: ₹ {{totalamount}}{% endif %}</h5>
+                    <h3>{{msg}}</h3>
+                {% if isservice %}
+                    <form id="phoneForm"  method="POST" action="/client/cl-towingrequest/{{storeid}}{{istowable}}">
+                        {% csrf_token%}
+                        <div class="row g-3 px-5">
+                            <div class="col-12 col-sm-6">
+                                <input type="text" class="form-control border-0" pattern="[A-Za-z ]{1,30}" value="{{request.user.username}}" title="Only alphabets and spaces are allowed, maximum 30 characters" maxlength="30" name="name" placeholder="Your Name"
+                                    style="height: 55px;" required>
+                            </div>
+
+                            {% if isproduct %}
+                                <div class="col-12 col-sm-6">
+                                    <div class="date"  data-target-input="nearest">
+                                        <input type="number"  class="form-control border-0 contact-number" placeholder="Contact info"
+                                            name="storename" style="height: 55px;" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12">
+                                    <input type="email" id="email" class="form-control border-0" value="{{request.user.email}} "name="email" placeholder="Your Email"
+                                        style="height: 55px;" required>
+                                    <small id="emailError" class="text-white d-none" style="color:white">Invalid Email Address</small>
+                                </div>
+
+                                <div class="col-12 col-sm-12">
+                                       <input type="text" class="form-control border-0"  name="address"  maxlength="60" placeholder="Address"
+                                            style="height: 55px;" required>
+                                </div>
+
+
+                            {% else%}
+
+                                    <div class="col-12 col-sm-6">
+                                    <input type="email" id="email" class="form-control border-0" value="{{  request.user.email }}" name="email" placeholder="Your Email"
+                                        style="height: 55px;" required>
+                                        <small id="emailError" class="text-white d-none" style="color:white">Invalid Email Address</small>
+                                </div>
+                                    <div class="col-12 col-sm-12">
+                                       <input type="text" class="form-control border-0" name="clientlocation" placeholder="Your location details"
+                                            style="height: 55px;" required>
+                                    </div>
+
+
+
+                                    <div class="col-12 col-sm-6">
+                                        <div class="date" id="date1" data-target-input="nearest">
+                                            <input type="text" class="form-control border-0 " maxlength="40" placeholder=" Additional Problem Details"
+                                                name="additionalprobleminfo" style="height: 55px;" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                    <div class="date" for="phone" id="date1" data-target-input="nearest">
+                                        <input type="tel" id="phone"  class="form-control border-0 contact-number" placeholder="Contact info"
+                                            name="contact" style="height: 55px;" required>
+                                        <span id="phoneError" class="error text-white"></span>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+                            <!--                                <div class="col-12">-->
+                            <!--                                    <textarea class="form-control border-0" placeholder="Special Request"></textarea>-->
+                            <!--                                </div>-->
+                            <div class="col-12">
+                                <div class="checkout-btn-container mt-3 mb-3" style="height: 20%; ">
+                                    <button class="btn btn-secondary w-100 py-3" style="color:white;">Confirm request<i class="fa-solid fa-arrow-right checkout-right-arrow"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <form  method="POST" action="/client/cl-productrequest/">
+                        {% csrf_token%}
+                        <div class="row g-3 px-5">
+                            <div class="col-12 col-sm-6">
+                                <input type="text" class="form-control border-0" value="{{request.user.username}}" name="name" placeholder="Your Name"
+                                    style="height: 55px;">
+                            </div>
+
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="date"  data-target-input="nearest">
+                                        <input type="number"  class="form-control border-0 contact-number" placeholder="Contact info"
+                                            name="contact" style="height: 55px;" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12">
+                                    <input type="email" id="email" class="form-control border-0" value="{{request.user.email}} " name="email" placeholder="Your Email"
+                                        style="height: 55px;" required>
+                                    <small id="emailError" class=" d-none text-white" style="color:white;">Invalid Email Address</small>
+                                </div>
+
+                                <div class="col-12 col-sm-12">
+                                       <textarea type="text" class="form-control border-0"  name="address" maxlength="60" placeholder="Address"
+                                                 style="height: 55px;" required></textarea>
+                                </div>
+                            <center><label class="text-white"  >Payment type : Cash on delivery</label></center>
+
+                            <!--                                <div class="col-12">-->
+                            <!--                                    <textarea class="form-control border-0" placeholder="Special Request"></textarea>-->
+                            <!--                                </div>-->
+                            <div class="col-12">
+                                <div class="checkout-btn-container mt-2 mb-2" style="height: 20%; ">
+                                    <button class="btn btn-secondary w-100 py-3" style="color:white;">Confirm request<i class="fa-solid fa-arrow-right checkout-right-arrow"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+function isValidPhoneNumber(phoneNumber) {
+  // Regular expression for validating phone numbers
+  const phoneRegex = /^\d{10}$/; // Assuming 10 digits for simplicity
+  return phoneRegex.test(phoneNumber);
+}
+
+     // Get the email input field and the error message element
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+  // Define a regular expression pattern for email validation
+  const emailPattern = /^[^\s@]+@gmail\.com$/;
+  // Add event listener to trigger validation on input change
+  emailInput.addEventListener('input', function() {
+    // Check if the entered email address matches the pattern
+    if (!emailPattern.test(emailInput.value)) {
+      emailError.classList.remove('d-none'); // Show error message
+      emailInput.setCustomValidity('Invalid Email Address'); // Set custom validation message
+    } else {
+      emailError.classList.add('d-none'); // Hide error message
+      emailInput.setCustomValidity(''); // Reset custom validation message
+    }
+  });
+
+    document.querySelectorAll(".contact-number")[0].addEventListener("input", function() {
+    var inputValue = this.value;
+    if (inputValue.length !== 10) {
+        this.setCustomValidity("Invalid contact");
+    } else {
+        this.setCustomValidity("");
+    }
+
+    if (inputValue.length > 10) {
+        this.value = inputValue.slice(0, 10);
+    }
+});
+
+
+</script>
+{% endblock %}

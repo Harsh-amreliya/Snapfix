@@ -1,0 +1,47 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+    <div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-25px;margin-left:-25px; height:580px; width:100%; ">
+
+          <div class="row "  >
+            <div class="col-md-9 grid-margin stretch-card mx-auto">
+              <div class="card" style="margin-top:100px; box-shadow:6px 6px 15px lightblue;" >
+                <div class="card-body" >
+                 <center> <h4 class="card-title">Edit Your Use in Category Here </h4>{{msg}}</center>
+                  <hr>
+                  <form class="forms-sample" method="POST" action="/stores/st-updateuseincategory/{{data.id}}" >
+                      {% csrf_token%}
+                    <br>
+                    <div class="row d-flex justify-content-around">
+
+                          <div class="form-group">
+                               <label for="exampleInputUsername1">Use Category</label>
+                            <select for="exampleInputUsername1" name="usecategory" class="form-control" style="width:10vw">
+                                <option value="Car" name="usecategory" {% if data.usecategory == 'Car' %} selected {% endif %} > Car </option>
+                                <option value="Bike" name="usecategory" {% if data.usecategory == 'Bike' %} selected {% endif %} > Bike </option>
+                            </select>
+
+                          </div>
+
+
+                          <div class="form-group">
+
+                            <label for="exampleInputUsername1">Where to Use</label>
+                            <input type="text" class="form-control" name="wheretouse" value="{{data.wheretouse}}" id="exampleInputUsername1" placeholder="Eg. Rear part, Front part, engine etc.." style="width:20vw">
+                          </div>
+
+                    </div>
+
+                    <hr>
+                  <center>
+                    <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Add ">
+
+                  </center>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+{% endblock %}

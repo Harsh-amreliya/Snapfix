@@ -1,0 +1,475 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add store</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+            color: white;
+        }
+
+        body{
+            background-color: black;
+            overflow-X:hidden;
+        }
+
+        body::-webkit-scrollbar{
+            width: 3px;
+        }
+        body::-webkit-scrollbar-thumb{
+            background-color: white;
+        }
+        .mynavbar{
+            display: flex;
+            height: 65px;
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            z-index:100;
+            background-color: white;
+            box-shadow: 0px 2px 25px rgba(175, 173, 173, 0.603);
+            align-items: center;
+        }
+        .brand-container img{
+            width: 200px;
+            height: 55px;
+
+        }
+        .brand-container,.profile{
+            display: flex;
+            align-items: center;
+        }
+        .profile img{
+            border-radius: 50%;
+            width:52px;
+            height: 52px;
+            margin-right: 20px;
+        }
+        input{
+            outline:  none;
+            border: none;
+            border-bottom: .1rem solid;
+            border-color: rgb(184, 184, 184);
+            /*border-radius: .3rem;*/
+            background-color: transparent;
+            font-size: 18px;
+        }
+       
+
+        form{
+            border-radius: .3rem;
+            box-shadow: 0 0 20px rgba(105, 105, 105, 0.546);
+        }
+
+        .w-65{
+            width: 65%;
+        }
+
+        hr{
+            border: .1rem solid ;
+            border-color: #999999 !important;
+        }
+
+        .w{
+            width: 46%;
+        }
+        .p{
+            padding-top:8rem;
+            padding-bottom: 4rem;
+        }
+        .add-store-btn{
+            background-color: transparent;
+            border: .1rem solid white;
+            border-radius: .5rem;
+            color: white;
+            font-weight: 400;
+            transition: all .7s;
+        }
+
+        .add-store-btn:hover{
+            transform: scale(1.1);
+        }
+        .carbg{
+            position: absolute;
+
+            width: 84.4vw;
+            height: 125%;
+            left:7rem;
+            z-index: -1;
+            background-color: black;
+            
+           /* padding: 0 23rem ;
+             padding-left: 23.3rem; */
+            
+        }
+.blackbg{
+    position: absolute;
+    z-index: -1;
+    background-color: black;
+    width: 84.4vw;
+    height: 125vh;
+    opacity: .7;
+   }
+   span.required-asterisk {
+        color: red;
+        left:22.5rem;
+        position:relative;
+        bottom:2.7rem;
+        opacity:0;
+   }
+   span.right-asterisk {
+        color: red;
+        left:35.4rem;
+        position:relative;
+        bottom:2.7rem;
+        opacity:0;
+   }
+    /* Red asterisk only for required invalid fields when submitted */
+        input:required:invalid + span.required-asterisk {
+            opacity:1; /* Show the asterisk */
+        }
+
+        /* Red bottom border and asterisk for empty required fields when submitted */
+        .submitted input:required:invalid {
+            border-bottom: 2px solid red;
+        }
+
+        .submitted input:required:invalid + span.required-asterisk {
+            opacity:1 ; /* Show the asterisk */
+        }
+        .custom-button{
+        border-bottom:0.1rem solid white;
+        }
+        .selected-file{
+        left:2rem;
+        color:grey;
+        }
+    </style>
+</head>
+<body>
+    <nav class="mynavbar">
+        <div class="brand-container"><img src="{% static 'serv/Snapfix_logo.png' %}" alt=""></div>
+        <div class="profile"><img src="{% static 'serv/images/faces/face1.jpg' %}" alt="no face found"> </div>
+    </nav>
+
+    <div class="p">
+
+
+
+    <div class="main container">
+        <div class="d-flex justify-content-center carbg mx-auto" >
+            <img class="w " src="{% static 'serv//images/car3.jpg' %}" alt="">
+        </div>
+      <center><h3>{{msg}}</h3></center>
+        <form id="myForm" method="post" enctype="multipart/form-data"  class=" px-5 py-2" style="z-index: 100;">
+          {% csrf_token %}
+            <div class="row p-4">
+
+                <div class="col-12 mb-3">
+                    <h3 class="text-center">Welcome {{ request.user }}</h3>
+                </div>
+
+                <div class="col-12 p-0">
+                    <h4>Owner's details</h4>
+                    
+                </div>
+
+                <div class="row m-0 p-0 mb-3">
+                    <div class="col-6 row  m-0 p-0">
+                        <div class="col-8">
+                            <hr>
+                        </div>
+                       <label class="col-12 p-0 w-65">Owner Name :</label>
+                        <input type="text" name="ownername" value="{{request.user}}" class="col-12 p-0 w-65 py-1 px-2" required pattern="[a-zA-Z0-9\s]*" title="Special characters are not allowed" maxlength="30">
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-6 row  m-0 p-0">
+                        <div class="col-8 ms-auto">
+                            <hr>
+                        </div>
+                        <label class="col-12 p-0 w-65  ms-auto">Owner's Email :</label>
+                        <input type="email" name="email" id="email"  value="{{request.user.email}}" class="col-12 p-0 w-65 py-1 px-2  ms-auto" required>
+                        <small id="emailError" class="text-danger d-none col-12 p-0 w-65  ms-auto">Invalid Email Address</small>
+                        <span class="required-asterisk right-asterisk">*</span>
+                     </div>
+                    
+                </div>
+                <div class="row m-0 p-0 mb-3">
+
+                    <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65">Owner's Contact :</label>
+                        <input type="number" name="ownercontact" id="contact-number" class="col-12 p-0 w-65 py-1 px-2" required>
+                        <span class="required-asterisk">*</span>
+                     </div>
+                    
+                    
+                    <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65  ms-auto">Owner's Document (Aadhar Card) :</label>
+                        <input type="file" id="file" name="ownersdocument" accept="application/pdf" onchange="displayFileName()" class="col-12 p-0 w-65 py-1 px-2  ms-auto d-none" required>
+                         <label for="file" class="col-12 p-0 w-65 py-1 px-2  ms-auto custom-button" >  Select File: <span class="selected-file" id="selectedFileName"></span></label>
+
+                        <span class="required-asterisk right-asterisk">*</span>
+                     </div>
+                </div>
+                <div class="col-12 p-0">
+                    <h4>Store details</h4>
+                </div>
+                <div class="row m-0 p-0 mb-3">
+                    <div class="col-6 row  m-0 p-0">
+                        <div class="col-8">
+                            <hr>
+                        </div>
+                        <label class="col-12 p-0 w-65 ">Store Name :</label>
+                        <input type="text" name="storename"  class="col-12 p-0 w-65 py-1 px-2 " required  title="Special characters are not allowed" maxlength="30">
+                        <span class="required-asterisk">*</span>
+                     </div>
+                     <div class="col-6 row  m-0 p-0">
+                        <div class="col-8 ms-auto">
+                            <hr>
+                        </div>
+                        <label class="col-12 p-0 w-65 ms-auto">Store Contact No. :</label>
+                        <input type="number" name="storecontact" id="contact-number-2" class="col-12 p-0 w-65 py-1 px-2 ms-auto" required>
+                         <span class="required-asterisk right-asterisk">*</span>
+                     </div>
+                    
+                </div>
+                <div class="row m-0 p-0 mb-3">
+
+                    
+                    <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65 ">Store Address :</label>
+                        <input type="text" name="storeaddress"  class="col-12 p-0 w-65 py-1 px-2  " required maxlength="60">
+                        <span class="required-asterisk">*</span>
+                     </div>
+
+                     <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65 ms-auto">Store First Started At :</label>
+                        <input type="date" name="storeestablishment" id="storeEstablishmentDate" class="col-12 p-0 w-65 py-1 px-2 ms-auto" required>
+                         <span class="required-asterisk right-asterisk">*</span>
+                     </div>
+                    
+                    
+                </div>
+                <div class="row m-0 p-0 mb-3">
+                    <div class="col-12 p-0 mb-2">Timing of Store</div>
+
+                    <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65">Opens From :</label>
+                        <input type="time" id="openingTime" name="openingtime" class="col-12 p-0 w-65 py-1 px-2" onchange="updateClosingTimeMin()" required>
+                        <span class="required-asterisk">*</span>
+                     </div>
+                     <div class="col-6 row  m-0 p-0">
+                        <label class="col-12 p-0 w-65  ms-auto">Closes At :</label>
+                        <input type="time" id="closingTime" name="closingtime"  class="col-12 p-0 w-65 py-1 px-2  ms-auto" onchange="updateOpeningTimeMax()" required>
+                         <span class="required-asterisk right-asterisk">*</span>
+                         <small id="timeWarning" class="text-danger col-12 p-0 w-65  ms-auto d-none">Opening and closing time should not be the same</small>
+
+                     </div>
+                    
+                   
+                    
+                </div>
+                <div class="row m-0 p-0 mb-3">
+
+                    <div class="col-6 row  m-0 p-0 file-input-container">
+                        <label class="col-12 p-0 w-65">Store Licence Document :</label>
+                        <input type="file" name="storelicencedocument" accept="application/pdf" class="col-12 p-0 w-65 py-1 px-2" required>
+
+                        <span class="required-asterisk">*</span>
+
+                     </div>
+                    
+                    <div class="col-6 row  m-0 p-0">
+                       <label class="col-12 p-0 w-65  ms-auto">Image of Store :</label>
+                       <input type="file" name="imageofstore" accept=".jpg, .jpeg, .png" class="col-12 p-0 w-65 py-1 px-2  ms-auto" required>
+                        <span class="required-asterisk right-asterisk">*</span>
+                    </div>
+                </div>
+                <div class="row m-0 p-0 mb-3">
+                    <div class="col-6 row  m-0 p-0">
+                       <label class="col-12 p-0 w-65">GST NO :</label>
+                       <input type="text" id="gstNumber"  name="gstno" class="col-12 p-0 w-65 py-1 px-2" required>
+                        <small id="gstNumberError" class="text-danger col-12 p-0 w-65 d-none">Invalid GST Number</small>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-6 row  m-0 p-0">
+                       <label class="col-12 p-0 w-65  ms-auto">HSN/SAC NO :</label>
+                       <input type="number" id="hsnSAC" name="hsnsac"  class="col-12 p-0 w-65 py-1 px-2  ms-auto" required>
+                        <small id="hsnSACError" class="text-danger col-12 p-0 w-65  ms-auto d-none">Invalid HSN/SAC Number</small>
+
+                        <span class="required-asterisk right-asterisk">*</span>
+                    </div>
+                  <input type="number" name="is_activee" value="1" hidden="hidden">
+                </div>
+
+                <div class="row m-0 p-0 mt-5 w-75 mx-auto">
+                    <input type="submit" class="w-25 py-2 mx-auto add-store-btn " onclick="validateForm()" value="Add Service Store">
+                </div>
+
+                  
+            </div>
+            
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+      function validateForm() {
+        var form = document.getElementById("myForm");
+
+        // Display the asterisks only after the submit button is clicked
+        form.classList.add("submitted");
+
+        // Check if the form is valid
+        if (form.checkValidity()) {
+            // If valid, submit the form or perform other actions
+            form.submit();
+        }
+    }
+
+     function displayFileName() {
+        var fileInput = document.getElementById('file');
+        var selectedFileName = document.getElementById('selectedFileName');
+
+        // Display the selected file name
+        selectedFileName.textContent = fileInput.files[0] ? fileInput.files[0].name : '';
+    }
+
+    document.getElementById("contact-number").addEventListener("input", function() {
+    var inputValue = this.value;
+    if (inputValue.length !== 10) {
+        this.setCustomValidity("Invalid contact");
+    } else {
+        this.setCustomValidity("");
+    }
+
+    if (inputValue.length > 10) {
+        this.value = inputValue.slice(0, 10);
+    }
+});
+
+    document.getElementById("contact-number-2").addEventListener("input", function() {
+    var inputValue = this.value;
+    if (inputValue.length !== 10) {
+        this.setCustomValidity("Invalid contact");
+    } else {
+        this.setCustomValidity("");
+    }
+
+    if (inputValue.length > 10) {
+        this.value = inputValue.slice(0, 10);
+    }
+});
+     // Get the email input field and the error message element
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+  // Define a regular expression pattern for email validation
+  const emailPattern = /^[^\s@]+@gmail\.com$/;
+  // Add event listener to trigger validation on input change
+  emailInput.addEventListener('input', function() {
+    // Check if the entered email address matches the pattern
+    if (!emailPattern.test(emailInput.value)) {
+      emailError.classList.remove('d-none'); // Show error message
+      emailInput.setCustomValidity('Invalid Email Address'); // Set custom validation message
+    } else {
+      emailError.classList.add('d-none'); // Hide error message
+      emailInput.setCustomValidity(''); // Reset custom validation message
+    }
+  });
+
+    // Get the GST number input field and the error message element
+  const gstNumberInput = document.getElementById('gstNumber');
+  const gstNumberError = document.getElementById('gstNumberError');
+
+  // Define a regular expression pattern for GST number validation
+  const gstNumberPattern = /^[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}[0-9A-Za-z]{1}[Z]{1}[0-9A-Za-z]{1}$/;
+
+  // Add event listener to trigger validation on input change
+  gstNumberInput.addEventListener('input', function() {
+    // Check if the entered GST number matches the pattern
+    if (!gstNumberPattern.test(gstNumberInput.value)) {
+      gstNumberError.classList.remove('d-none'); // Show error message
+      gstNumberInput.setCustomValidity('Invalid GST Number'); // Set custom validation message
+    } else {
+      gstNumberError.classList.add('d-none'); // Hide error message
+      gstNumberInput.setCustomValidity(''); // Reset custom validation message
+    }
+  });
+     // Get the HSN/SAC number input field and the error message element
+  const hsnSACInput = document.getElementById('hsnSAC');
+  const hsnSACError = document.getElementById('hsnSACError');
+
+  // Define a regular expression pattern for HSN/SAC number validation
+  const hsnSACPattern = /^[0-9]{4}\s*[0-9]{2}\s*[0-9A-Za-z]{2}\s*[0-9]{1,3}$/;
+
+  // Add event listener to trigger validation on input change
+  hsnSACInput.addEventListener('input', function() {
+    // Check if the entered HSN/SAC number matches the pattern
+    if (!hsnSACPattern.test(hsnSACInput.value)) {
+      hsnSACError.classList.remove('d-none'); // Show error message
+      hsnSACInput.setCustomValidity('Invalid HSN/SAC Number'); // Set custom validation message
+    } else {
+      hsnSACError.classList.add('d-none'); // Hide error message
+      hsnSACInput.setCustomValidity(''); // Reset custom validation message
+    }
+  });
+
+    const today = new Date().toISOString().split('T')[0];
+
+  // Set the maximum allowed date for the input field
+  document.getElementById('storeEstablishmentDate').max = today;
+
+ function updateClosingTimeMin() {
+    const openingTimeInput = document.getElementById('openingTime');
+    const closingTimeInput = document.getElementById('closingTime');
+    const timeWarning = document.getElementById('timeWarning');
+
+    // Set the minimum value of the closing time input to be after the opening time
+    closingTimeInput.min = openingTimeInput.value;
+
+    // If the current value of the closing time input is before or equal to the opening time, reset its value
+    if (closingTimeInput.value <= openingTimeInput.value) {
+      closingTimeInput.value = '';
+    }
+
+    // Check if opening and closing times are the same
+    if (closingTimeInput.value === openingTimeInput.value) {
+      timeWarning.classList.remove('d-none'); // Show warning message
+    } else {
+      timeWarning.classList.add('d-none'); // Hide warning message
+    }
+  }
+
+  function updateOpeningTimeMax() {
+    const openingTimeInput = document.getElementById('openingTime');
+    const closingTimeInput = document.getElementById('closingTime');
+    const timeWarning = document.getElementById('timeWarning');
+
+    // Set the maximum value of the opening time input to be before the closing time
+    openingTimeInput.max = closingTimeInput.value;
+
+    // If the current value of the opening time input is after or equal to the closing time, reset its value
+    if (openingTimeInput.value >= closingTimeInput.value) {
+      openingTimeInput.value = '';
+    }
+
+    // Check if opening and closing times are the same
+    if (closingTimeInput.value === openingTimeInput.value) {
+      timeWarning.classList.remove('d-none'); // Show warning message
+    } else {
+      timeWarning.classList.add('d-none'); // Hide warning message
+    }
+  }
+</script>
+
+</body>
+</html>

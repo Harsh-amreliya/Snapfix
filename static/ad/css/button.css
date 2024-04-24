@@ -1,0 +1,23 @@
+.t-1-07{
+    transition:0.7s !important
+}
+
+.t-1-07:hover{
+    transform:scale(1.1)
+}
+
+.dashheight{
+    margin-top:15px; !important
+}
+.scroll-hider::-webkit-scrollbar{
+    width:5px;
+    background-color:transparent;
+
+}
+.scroll-hider::-webkit-scrollbar-track{
+    background-color:transparent;
+}
+.scroll-hider::-webkit-scrollbar-thumb{
+    background-color:rgb(200, 200, 200, 0.5);
+
+}

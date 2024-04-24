@@ -1,0 +1,90 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapfix Login</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: url("{% static 'st/bg1.png'%}") center/cover no-repeat;
+    background-color:black;
+}
+
+.container {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.login-form h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline:none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff3c18;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: red;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <form class="login-form" method="POST">
+            {% csrf_token%}
+            <h4>{{msg}}</h4>
+            <h1>Snapfix Login</h1>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <p>Don't have an account <a href="{% url 'cl-register' %}">register now</a></p>
+        </form>
+    </div>
+</body>
+</html>

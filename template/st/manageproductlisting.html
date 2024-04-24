@@ -1,0 +1,63 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">Manage Products Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+                {% if data %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">ID</th>
+                          <th class="card-title">Product image</th>
+                          <th class="card-title">Product Name</th>
+                          <th class="card-title">Use Category</th>
+                          <th class="card-title">model year</th>
+                          <th class="card-title">Product price</th>
+                          <th class="card-title">View</th>
+                          <th class="card-title">Delete</th>
+                        </tr>
+                      </thead>
+                      {% for d in data %}
+                      <tbody>
+                        <tr>
+                            <td>{{d.id}}</td>
+                          <td class="py-2" > <img src="{{ d.productimage.url }}" alt="image" style="height:65px; width:90px; border-radius:5px"/></td>
+                          <td>{{d.productname}}</td>
+                          <td> {{ d.usecategorylist.companyname}} ( {{d.usecategorylist.modelname}} )</td>
+                          <td> {{ d.usecategorylist.modelyear}}</td>
+                          <td>{{d.productprice}}</td>
+                            <td><a href="{% url 'st-editproduct' d.id %}">View</a></td>
+                            <td><a href="{% url 'st-deleteproduct' d.id %}">Delete</a></td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+
+                    </table>
+                  </div>
+                {% else %}
+                    <center>
+                    <h3 class=" text-center text-danger" >Oops No Products listed yet... </h3><br>
+                    <img  src="{% static 'st/images/no-product.jpg' %}" style="height:30rem; width:38rem; "><br>
+                    <h3 class=" text-center card-title">Click here to add <a href="{% url 'st-productlisting' %}" class="text-danger">Products.</a></h3></center>
+
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}

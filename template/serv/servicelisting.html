@@ -1,0 +1,72 @@
+{% extends "serv/master.html" %}
+{% block content %}
+{% load static %}
+<style>
+    .hidden{
+        display:none;
+    }
+
+</style>
+<div style="background-image: url('{% static 'st/images/form-bg.png'%}');margin-top:-20px; height:638px; width:100%; ">
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card" style="margin-top:100px; box-shadow:6px 6px 15px lightblue;">
+                <div class="card-body">
+                 <center> <h4 class="card-title">List Your Services Here</h4>
+                     {{msg}}</center>
+                  <hr>
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data" >
+                      {%csrf_token%}
+                    <br>
+                    <div class="row d-flex justify-content-around " >
+
+                          <div class="form-group col-5">
+
+                            <label for="exampleInputUsername1">Service Name</label>
+                            <input type="text" class="form-control" name="servicename" maxlength="30" pattern="[a-zA-Z\s\']"   placeholder="Service name  " required>
+                          </div>
+<input hidden="hidden" value="True" name="active">
+                          <div class="form-group col-5">
+                                <label for="exampleInputUsername1">Service Image </label>
+                                <input type="file" class="form-control" name="serviceimage" id="exampleInputUsername1" accept="image/jpeg, image/png" required title="Only JPG and PNG files are allowed">
+                            </div>
+
+                          <div class="form-group col-5">
+                            <label for="exampleInputConfirmPassword1">Service Price</label>
+                            <input type="number" class="form-control" name="serviceprice"  id="exampleInputConfirmPassword1" placeholder="Price of service" required>
+                          </div>
+
+                        <div class="form-group col-5">
+                            <label for="exampleInputUsername1">Average Time Needed</label>
+                            <input type="text" class="form-control" pattern="^[a-zA-Z0-9\s]+$" title="Special characters are not allowed" maxlength="10" name="avgtime" value="" id="companyname" placeholder="Eg: 3 Hours" required>
+                        </div>
+
+                        <div class="form-group col-12 mt-1" style="padding:0 4rem;">
+
+                            <input type="checkbox" class="mt-1" name="towable" value="1"> <label for="exampleInputUsername1">Towing required</label>
+                          </div>
+
+                    </div>
+                    <div class="d-flex justify-content-end w-100">
+                      To upload excel sheet click&nbsp;<a href="{% url 'serv-uploadexcel' %}">  here. </a>
+                    </div>
+                    <hr>
+                  <center>
+                    <input type="submit" class="btn btn-primary mr-2 t-1-07" value="Add Service">
+
+                  </center>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+<script>
+    document.getElementById("exampleInputConfirmPassword1").addEventListener("input", function() {
+    if (this.value.length > 7) {
+        this.value = this.value.slice(0, 7);
+    }
+});
+</script>
+{% endblock %}

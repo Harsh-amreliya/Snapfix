@@ -1,0 +1,85 @@
+{% extends "st/master.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    .download-icon{
+        background-color:lightblue;
+        border-radius:3px;
+    }
+    .share-icon{
+        background-color:lightgreen;
+        color:#008000a3;
+        border-radius:3px;
+        margin-left:15px;
+        padding-left:7px;
+        padding-right:5px;
+
+    }
+</style>
+
+          <div class="row">
+
+          <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                 <center> <h4 class="card-title">View Orders Here</h4></center>
+                  <hr>
+                  <p class="card-description">
+<!--                    Add class <code>.table-hover</code>-->
+                  </p>
+              {% if orderdata %}
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead >
+                        <tr>
+                          <th class="card-title">Order id</th>
+                          <th class="card-title">Client name</th>
+                          <th class="card-title"> Product name </th>
+                          <th class="card-title">Contact no.</th>
+                          <th class="card-title">Address</th>
+                          <th class="card-title">Date of order</th>
+                          <th class="card-title">Invoice</th>
+                            <th class="card-title">Completed</th>
+
+                        </tr>
+                      </thead>
+                    {% for a, products in orderdata.items %}
+                        <tbody>
+
+
+                            <tr>
+                                <td>{{ a.id }}</td>
+                                <td>{{ a.name }}</td>
+                                <td><strong >Total -- ₹ {{a.totalprice}}</strong><br>{% for product in products %}
+                                        {{forloop.counter}}. {{ product.productname }}<br>
+                                 {% endfor %}</td>
+                                <td>{{ a.contact }}</td>
+                                <td>{{ a.address }}</td>
+                                <td>{{ a.date }}</td>
+                            <td ><a href="{% url 'st-viewinvoice' a.id request.user.id %}" > <i  class="fa-solid fa-eye px-2 py-3 fa-lg download-icon"></i></a></td>
+                            <td>{% if a.completed %} <i  class="fa-solid fa-square-check px-2 py-3 fa-lg download-icon  " style="background-color: lightgreen;color: #008000a3;"></i>   {% else %}<a href="{% url 'st-completed' a.id  %}" ><i  class="fa-solid fa-square-check px-2 py-3 fa-lg download-icon " style="background-color:#ff8e8e; color:#ff0000;"></i></a> {% endif %}</td>
+                        </tr>
+
+                      </tbody>
+                    {% endfor %}
+
+
+                    </table>
+                  </div >
+                {% else %}
+                        <center>
+                    <h3 class=" text-center text-danger" >Oops No Orders Found... </h3><br>
+                    <img  src="{% static 'st/images/no-orders.jpg' %}" style="height:33rem; width:35rem;">
+                    </center>
+
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+{% endblock %}
