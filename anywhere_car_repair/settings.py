@@ -93,7 +93,7 @@ EMAIL_HOST = 'smtp.gmail.com'  # Your SMTP server address
 EMAIL_PORT = 587  # Your SMTP server port (587 for TLS, 465 for SSL)
 EMAIL_USE_TLS = True  # Set it to True if your SMTP server requires TLS encryption
 EMAIL_HOST_USER = 'snapfix55@gmail.com'  # Your email address used for authentication
-EMAIL_HOST_PASSWORD = 'thhd kwxq xvyx dqbu'  # Your email password or application-specific password
+EMAIL_HOST_PASSWORD = '*****'  # Your email password or application-specific password
 DEFAULT_FROM_EMAIL = 'snapfix55@gmail.com'  # Default sender email address
 
 
